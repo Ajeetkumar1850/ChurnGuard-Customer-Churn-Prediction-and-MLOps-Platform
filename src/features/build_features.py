@@ -2,12 +2,11 @@
 
 from __future__ import annotations
 
-import json
+import json , pandas as pd
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import List, Tuple
 
-import pandas as pd
 
 from src.utils.logger import get_logger
 from src.utils.paths import ensure_directories_exist, get_paths
