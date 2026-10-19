@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import json
+import json , pandas as pd
 from datetime import datetime, timezone
 
 from src.ingestion.load_data import load_raw_churn_data
