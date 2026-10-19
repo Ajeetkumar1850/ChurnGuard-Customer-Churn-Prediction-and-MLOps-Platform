@@ -1,38 +1,40 @@
-"""FastAPI application for churn model inference."""
+"""Flask application for churn model inference."""
 
 from __future__ import annotations
 
-from flask import Flask
+from flask import Flask, request, jsonify
 
 from api.schemas import PredictionRequest, PredictionResponse
 from src.serving.predict import make_prediction
 
-app = FastAPI(
-    title="Customer Churn Prediction API",
-    description="FastAPI service for telecom customer churn prediction.",
-    version="0.1.0",
-)
+app = Flask(__name__)
+app.config['TITLE'] = "Customer Churn Prediction API"
+app.config['DESCRIPTION'] = "Flask service for telecom customer churn prediction."
+app.config['VERSION'] = "0.1.0"
 
 
-@app.get("/")
-def read_root() -> dict:
+@app.route("/")
+def read_root():
     """Health-style root endpoint."""
-    return {"message": "Customer Churn Prediction API is running."}
+    return jsonify({"message": "Customer Churn Prediction API is running."})
 
 
-@app.post("/predict", response_model=PredictionResponse)
-def predict(request: PredictionRequest) -> PredictionResponse:
+@app.route("/predict", methods=["POST"])
+def predict():
     """Generate a churn prediction from engineered feature inputs."""
     try:
-        prediction, probability = make_prediction(request.features)
+        req_data = request.get_json()
+        features = req_data.get("features")
+        
+        prediction, probability = make_prediction(features)
         prediction_label = "Yes" if prediction == 1 else "No"
 
-        return PredictionResponse(
-            prediction=prediction,
-            prediction_label=prediction_label,
-            churn_probability=probability,
-        )
+        return jsonify({
+            "prediction": prediction,
+            "prediction_label": prediction_label,
+            "churn_probability": probability
+        })
     except FileNotFoundError as exc:
-        raise HTTPException(status_code=500, detail=str(exc)) from exc
+        return jsonify({"error": str(exc)}), 500
     except Exception as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
+        return jsonify({"error": str(exc)}), 400

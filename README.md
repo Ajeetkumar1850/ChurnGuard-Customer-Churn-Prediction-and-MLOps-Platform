@@ -1,5 +1,5 @@
 ![Python](https://img.shields.io/badge/Python-3.11-blue)
-![FastAPI](https://img.shields.io/badge/FastAPI-API-green)
+![Flask](https://img.shields.io/badge/Flask-API-green)
 ![Docker](https://img.shields.io/badge/Docker-Containerized-blue)
 ![MLflow](<https://img.shields.io/badge/MLflow-Experiment%20Tracking-orange>)
 ![Tests](https://img.shields.io/badge/tests-pytest-success)
@@ -26,8 +26,8 @@ The system includes:
 - XGBoost hyperparameter tuning with `GridSearchCV`
 - MLflow experiment tracking
 - Persisted model and reporting artifacts
-- FastAPI inference
-- Interactive Swagger/OpenAPI documentation
+- Flask REST API inference
+- RESTful JSON endpoints
 - Docker containerization
 - Automated testing with `pytest`
 - Continuous Integration with GitHub Actions
@@ -117,9 +117,9 @@ Tracked information includes:
 
 The current implementation uses a local file-based MLflow tracking store.
 
-### ⚡ FastAPI Inference Service
+### ⚡ Flask Inference Service
 
-The project exposes model inference through a FastAPI REST service.
+The project exposes model inference through a Flask REST service.
 
 The `/predict` endpoint:
 
@@ -127,13 +127,13 @@ The `/predict` endpoint:
 - Loads the persisted baseline model
 - Generates a churn classification
 - Calculates positive-class probability when supported
-- Returns a structured prediction response
+- Returns a structured JSON prediction response
 
-Interactive Swagger/OpenAPI documentation is automatically available through FastAPI.
+The API provides clean RESTful endpoints for integration with other services.
 
 ### 🐳 Containerized Runtime
 
-The API can run inside a Docker container using Python 3.11 and Uvicorn.
+The API can run inside a Docker container using Python 3.11 and Flask development server.
 
 Docker Compose provides a convenient local container workflow with:
 
@@ -192,14 +192,14 @@ H --> K[Baseline Model Artifact]
 I --> L[Tuned XGBoost Artifact]
 
 K --> M[Prediction Service]
-M --> N[FastAPI Inference API]
+M --> N[Flask Inference API]
 
 N --> O[Docker Container]
 O --> P[REST Prediction Endpoint]
-P --> Q[Swagger / OpenAPI UI]
+P --> Q[JSON Response]
 ```
 
-> **Current serving behavior:** the FastAPI prediction service loads the persisted Logistic Regression baseline model. The tuned XGBoost model is produced and persisted separately as a model-development artifact.
+> **Current serving behavior:** the Flask prediction service loads the persisted Logistic Regression baseline model. The tuned XGBoost model is produced and persisted separately as a model-development artifact.
 
 ---
 
@@ -213,8 +213,8 @@ P --> Q[Swagger / OpenAPI UI]
 | Hyperparameter Tuning  | GridSearchCV           |
 | Experiment Tracking    | MLflow                 |
 | Model Persistence      | Joblib                 |
-| API                    | FastAPI                |
-| API Server             | Uvicorn                |
+| API                    | Flask                  |
+| API Server             | Flask Dev Server       |
 | Containerization       | Docker, Docker Compose |
 | Testing                | pytest                 |
 | Continuous Integration | GitHub Actions         |
@@ -298,13 +298,13 @@ python -m src.training.train
 Start the API:
 
 ```powershell
-uvicorn api.main:app --reload
+python -m flask --app api.main run
 ```
 
-Open the interactive API documentation:
+Access the API endpoint:
 
 ```text
-http://localhost:8000/docs
+http://localhost:5000/predict
 ```
 
 ### 🐳 Option 2 — Run with Docker
@@ -321,10 +321,10 @@ Start the service:
 docker compose up
 ```
 
-Open the API documentation:
+Access the API endpoint:
 
 ```text
-http://localhost:8000/docs
+http://localhost:5000/predict
 ```
 
 ---
@@ -453,8 +453,8 @@ This provides automated regression checking as the codebase evolves.
 | XGBoost tuning                     | ✅ Implemented      |
 | MLflow experiment tracking         | ✅ Implemented      |
 | Model artifact persistence         | ✅ Implemented      |
-| FastAPI inference                  | ✅ Implemented      |
-| Swagger/OpenAPI documentation      | ✅ Implemented      |
+| Flask REST API inference           | ✅ Implemented      |
+| RESTful JSON endpoints             | ✅ Implemented      |
 | Docker containerization            | ✅ Implemented      |
 | Docker Compose workflow            | ✅ Implemented      |
 | Automated pytest suite             | ✅ Implemented      |
@@ -527,7 +527,7 @@ This project demonstrates practical skills relevant to **Machine Learning Engine
 - Tracking experiments with MLflow
 - Persisting machine learning artifacts
 - Serving trained models through REST APIs
-- Building FastAPI inference services
+- Building Flask inference services
 - Containerizing ML applications
 - Writing automated tests
 - Implementing CI with GitHub Actions

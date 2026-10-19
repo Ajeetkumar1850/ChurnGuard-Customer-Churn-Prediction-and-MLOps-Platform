@@ -1,6 +1,6 @@
-fastapi
-uvicorn
-pydantic
+flask
+flask-restful
+marshmallow
 pandas
 scikit-learn
 xgboost

@@ -1,23 +1,25 @@
-"""Pydantic schemas for the churn prediction API."""
+"""Marshmallow schemas for the churn prediction API."""
 
 from __future__ import annotations
 
 from typing import Dict
 
-from pydantic import BaseModel, Field
+from marshmallow import Schema, fields
 
 
-class PredictionRequest(BaseModel):
+class PredictionRequest(Schema):
     """Schema for a single churn prediction request.
 
     This API version expects already-engineered feature inputs.
     """
 
-    features: Dict[str, float] = Field(
-        ...,
-        description="Dictionary of engineered feature names and numeric values.",
-        examples=[
-            {
+    features = fields.Dict(
+        keys=fields.Str(),
+        values=fields.Float(),
+        required=True,
+        metadata={
+            "description": "Dictionary of engineered feature names and numeric values.",
+            "example": {
                 "tenure": 12.0,
                 "MonthlyCharges": 70.35,
                 "TotalCharges": 844.20,
@@ -36,13 +38,13 @@ class PredictionRequest(BaseModel):
                 "Contract_One year": 0.0,
                 "Contract_Two year": 0.0,
             }
-        ],
+        }
     )
 
 
-class PredictionResponse(BaseModel):
+class PredictionResponse(Schema):
     """Schema for churn prediction output."""
 
-    prediction: int
-    prediction_label: str
-    churn_probability: float
+    prediction = fields.Int()
+    prediction_label = fields.Str()
+    churn_probability = fields.Float()
