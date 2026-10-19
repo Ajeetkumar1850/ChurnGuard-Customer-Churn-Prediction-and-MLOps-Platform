@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from fastapi import FastAPI, HTTPException
+from flask import Flask
 
 from api.schemas import PredictionRequest, PredictionResponse
 from src.serving.predict import make_prediction
