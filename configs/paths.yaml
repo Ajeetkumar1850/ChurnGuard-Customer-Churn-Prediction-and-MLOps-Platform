@@ -1,0 +1,21 @@
+project:
+  name: customer-churn-platform
+
+data:
+  raw_dir: data/raw
+  interim_dir: data/interim
+  processed_dir: data/processed
+
+files:
+  raw_churn_data: data/raw/telco_churn.csv
+  processed_churn_data: data/processed/churn_processed.parquet
+  feature_data: data/interim/churn_features.parquet
+  ingestion_log: artifacts/reports/ingestion_summary.json
+  feature_log: artifacts/reports/feature_summary.json
+  training_metrics: artifacts/reports/training_metrics.json
+  baseline_model: artifacts/models/baseline_model.joblib
+
+artifacts:
+  models_dir: artifacts/models
+  reports_dir: artifacts/reports
+  figures_dir: artifacts/figures
